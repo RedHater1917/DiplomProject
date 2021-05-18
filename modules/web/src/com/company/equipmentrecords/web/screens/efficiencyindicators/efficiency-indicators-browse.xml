@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+        caption="msg://efficiencyIndicatorsBrowse.caption"
+        focusComponent="efficiencyIndicatorsesTable"
+        messagesPack="com.company.equipmentrecords.web.screens.efficiencyindicators">
+    <data readOnly="true">
+        <collection id="efficiencyIndicatorsesDc"
+                    class="com.company.equipmentrecords.entity.EfficiencyIndicators">
+            <view extends="_local">
+                <property name="equipment" view="_minimal">
+                    <property name="number"/>
+                    <property name="name"/>
+                </property>
+                <property name="worker" view="_minimal"/>
+            </view>
+            <loader id="efficiencyIndicatorsesDl">
+                <query>
+                    <![CDATA[select e from equipmentrecords_EfficiencyIndicators e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="efficiencyIndicatorsesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="efficiencyIndicatorsesTable"
+                dataLoader="efficiencyIndicatorsesDl">
+            <properties include=".*"/>
+        </filter>
+        <table id="efficiencyIndicatorsesTable"
+               width="100%"
+               dataContainer="efficiencyIndicatorsesDc"
+               multiselect="true">
+            <actions>
+                <action id="create" type="create"/>
+                <action id="edit" type="edit"/>
+                <action id="remove" type="remove"/>
+                <action id="refresh" type="refresh"/>
+                <action id="excel" type="excel"/>
+            </actions>
+            <columns>
+                <column id="equipment"/>
+                <column id="worker"/>
+                <column id="producedProduction"/>
+                <column id="defectivePercent"/>
+                <column id="date"/>
+            </columns>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="efficiencyIndicatorsesTable.create"/>
+                <button id="editBtn" action="efficiencyIndicatorsesTable.edit"/>
+                <button id="removeBtn" action="efficiencyIndicatorsesTable.remove"/>
+                <button id="refreshBtn" action="efficiencyIndicatorsesTable.refresh"/>
+                <button id="excelBtn" action="efficiencyIndicatorsesTable.excel"/>
+            </buttonsPanel>
+        </table>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>

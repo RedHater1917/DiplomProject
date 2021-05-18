@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <menu id="application-equipmentrecords" insertBefore="administration" caption="mainMsg://menu_config.application-equipmentrecords">
+        <item screen="equipmentrecords_EfficiencyIndicators.browse"
+              caption="mainMsg://menu_config.equipmentrecords_EfficiencyIndicators.browse"/>
+        <item screen="equipmentrecords_Equipment.browse"
+              caption="mainMsg://menu_config.equipmentrecords_Equipment.browse"/>
+        <item screen="equipmentrecords_Worker.browse" caption="mainMsg://menu_config.equipmentrecords_Worker.browse"/>
+        <item screen="equipmentrecords_Graph" caption="mainMsg://menu_config.equipmentrecords_Graph"/>
+    </menu>
+</menu-config>

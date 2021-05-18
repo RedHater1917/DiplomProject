@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://efficiencyIndicatorsEdit.caption"
+        focusComponent="form"
+        messagesPack="com.company.equipmentrecords.web.screens.efficiencyindicators">
+    <data>
+        <instance id="efficiencyIndicatorsDc"
+                  class="com.company.equipmentrecords.entity.EfficiencyIndicators">
+            <view extends="_local">
+                <property name="equipment" view="_minimal">
+                    <property name="number"/>
+                    <property name="name"/>
+                </property>
+                <property name="worker" view="_minimal"/>
+            </view>
+            <loader/>
+        </instance>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="editActions" spacing="true">
+        <form id="form" dataContainer="efficiencyIndicatorsDc">
+            <column width="350px">
+                <pickerField id="equipmentField" property="equipment">
+                    <actions>
+                        <action id="lookup" type="picker_lookup"/>
+                        <action id="clear" type="picker_clear"/>
+                    </actions>
+                </pickerField>
+                <pickerField id="workerField" property="worker">
+                    <actions>
+                        <action id="lookup" type="picker_lookup"/>
+                        <action id="clear" type="picker_clear"/>
+                    </actions>
+                </pickerField>
+                <textField id="producedProductionField" property="producedProduction"/>
+                <textField id="defectivePercentField" property="defectivePercent"/>
+                <dateField id="dateField" property="date"/>
+            </column>
+        </form>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

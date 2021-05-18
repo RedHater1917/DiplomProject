@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
+        caption="msg://graph.caption"
+        messagesPack="com.company.equipmentrecords.web.screens.graph">
+    <layout>
+        <vbox>
+            <hbox>
+                <hbox>
+                    <lookupField caption="Поле значений" id="column1">
+                    </lookupField>
+                    <checkBox id="col1Group">
+                    </checkBox>
+                    <checkBox id="col1Order">
+                    </checkBox>
+                </hbox>
+                <hbox>
+                    <lookupField caption="Поле группировки" id="column2">
+                    </lookupField>
+                    <checkBox id="col2Group">
+                    </checkBox>
+                    <checkBox id="col2Order">
+                    </checkBox>
+                </hbox>
+                <radioButtonGroup id="graph_choose" property="type"
+                                  optionsEnum="com.company.equipmentrecords.entity.InstancesForGraphs">
+                </radioButtonGroup>
+                <label id="test">
+                </label>
+                <button invoke="drawGraph" id="draw" caption="График">
+                </button>
+            </hbox>
+            <progressBar id="load" visible="false" indeterminate="true"  stylename="indeterminate-circle">
+            </progressBar>
+            <chart:serialChart id="graph" categoryField="y"
+                           startDuration="1" visible="false">
+                <chart:graphs>
+                    <chart:graph balloonText="Значение:[[x]] Группировка:[[y]]"
+                                 fillToAxis="x"
+                                 valueField="x"/>
+                </chart:graphs>
+                <chart:categoryAxis gridPosition="START"/>
+                <chart:valueAxes>
+                    <chart:axis id="y"
+                                axisAlpha="0"
+                                dashLength="1"
+                                position="LEFT"
+                                title="Показатели поля"/>
+                </chart:valueAxes>
+            </chart:serialChart>
+        </vbox>
+    </layout>
+</window>

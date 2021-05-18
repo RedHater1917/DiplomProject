@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+        caption="msg://workerBrowse.caption"
+        focusComponent="workersTable"
+        messagesPack="com.company.equipmentrecords.web.screens.worker">
+    <data readOnly="true">
+        <collection id="workersDc"
+                    class="com.company.equipmentrecords.entity.Worker">
+            <view extends="_local"/>
+            <loader id="workersDl">
+                <query>
+                    <![CDATA[select e from equipmentrecords_Worker e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="workersTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="workersTable"
+                dataLoader="workersDl">
+            <properties include=".*"/>
+        </filter>
+        <table id="workersTable"
+               width="100%"
+               dataContainer="workersDc">
+            <actions>
+                <action id="create" type="create"/>
+                <action id="edit" type="edit"/>
+                <action id="remove" type="remove"/>
+                <action id="refresh" type="refresh"/>
+                <action id="excel" type="excel"/>
+            </actions>
+            <columns>
+                <column id="fio"/>
+                <column id="age"/>
+                <column id="experience"/>
+                <column id="position"/>
+            </columns>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="workersTable.create"/>
+                <button id="editBtn" action="workersTable.edit"/>
+                <button id="removeBtn" action="workersTable.remove"/>
+                <button id="refreshBtn" action="workersTable.refresh"/>
+                <button id="excelBtn" action="workersTable.excel"/>
+            </buttonsPanel>
+        </table>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>
