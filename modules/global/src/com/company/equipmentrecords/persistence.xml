@@ -5,5 +5,6 @@
         <class>com.company.equipmentrecords.entity.Equipment</class>
         <class>com.company.equipmentrecords.entity.EfficiencyIndicators</class>
         <class>com.company.equipmentrecords.entity.Worker</class>
+        <class>com.company.equipmentrecords.entity.EquipmentStateChange</class>
     </persistence-unit>
 </persistence>

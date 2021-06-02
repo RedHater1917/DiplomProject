@@ -3,27 +3,27 @@ package com.company.equipmentrecords.entity;
 import java.io.Serializable;
 
 public class GraphObject<T,F> implements Serializable{
-    private T cordX;
-    private F cordY;
+    private T value;
+    private F category;
 
-    public GraphObject(T cordX,F cordY){
-        this.cordX = cordX;
-        this.cordY = cordY;
+    public GraphObject(T value,F category){
+        this.value = value;
+        this.category = category;
     }
 
-    public T getCordX() {
-        return cordX;
+    public T getValue() {
+        return value;
     }
 
-    public void setCordX(T cordX) {
-        this.cordX = cordX;
+    public void setValue(T value) {
+        this.value = value;
     }
 
-    public F getCordY() {
-        return cordY;
+    public F getCategory() {
+        return category;
     }
 
-    public void setCordY(F cordY) {
-        this.cordY = cordY;
+    public void setCategory(F category) {
+        this.category = category;
     }
 }

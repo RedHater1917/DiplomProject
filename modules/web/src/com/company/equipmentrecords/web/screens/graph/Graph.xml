@@ -3,31 +3,63 @@
         xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
         caption="msg://graph.caption"
         messagesPack="com.company.equipmentrecords.web.screens.graph">
+    <actions>
+        <action id="changeColFunc"
+                caption="Click Me!"/>
+    </actions>
     <layout>
         <vbox>
-            <hbox>
-                <hbox>
-                    <lookupField caption="Поле значений" id="column1">
+            <hbox spacing="true">
+                <vbox spacing="true">
+                    <lookupField caption="msg://value" id="column1">
                     </lookupField>
-                    <checkBox id="col1Group">
+                    <checkBox caption="msg://sort" id="col1Order">
                     </checkBox>
-                    <checkBox id="col1Order">
-                    </checkBox>
-                </hbox>
-                <hbox>
-                    <lookupField caption="Поле группировки" id="column2">
+                    <hbox>
+                        <checkBox caption="msg://func" id="colFuncCheckBox">
+                        </checkBox>
+                        <popupButton id="colFunc" caption="SUM" visible="false" popupOpenDirection="BOTTOM_CENTER">
+                            <popup>
+                                <vbox height="AUTO"
+                                      spacing="true"
+                                      margin="true">
+                                    <button width="100px" action="changeColFunc" caption="AVG"
+                                            id="AVG">
+                                    </button>
+                                    <button width="100px" action="changeColFunc" caption="COUNT"
+                                            id="COUNT">
+                                    </button>
+                                    <button width="100px" action="changeColFunc" caption="MIN"
+                                            id="MIN">
+                                    </button>
+                                    <button width="100px" action="changeColFunc" caption="MAX"
+                                            id="MAX">
+                                    </button>
+                                    <button width="100px" action="changeColFunc" caption="SUM"
+                                            id="SUM">
+                                    </button>
+                                </vbox>
+                            </popup>
+                        </popupButton>
+                    </hbox>
+                </vbox>
+                <vbox spacing="true">
+                    <lookupField caption="msg://group" id="column2">
                     </lookupField>
-                    <checkBox id="col2Group">
+                    <checkBox caption="msg://sort" id="col2Order">
                     </checkBox>
-                    <checkBox id="col2Order">
-                    </checkBox>
-                </hbox>
-                <radioButtonGroup id="graph_choose" property="type"
-                                  optionsEnum="com.company.equipmentrecords.entity.InstancesForGraphs">
-                </radioButtonGroup>
-                <label id="test">
-                </label>
-                <button invoke="drawGraph" id="draw" caption="График">
+                </vbox>
+                <popupView id="popupView"
+                           hideOnMouseOut="false">
+                    <vbox>
+                        <radioButtonGroup id="graph_choose" property="type"
+                                      optionsEnum="com.company.equipmentrecords.entity.InstancesForGraphs">
+                        </radioButtonGroup>
+                    </vbox>
+                </popupView>
+                <button id="button"
+                        caption="msg://entity"/>
+                <button invoke="drawGraph" id="draw" caption="msg://draw" enable="false">
                 </button>
             </hbox>
             <progressBar id="load" visible="false" indeterminate="true"  stylename="indeterminate-circle">
@@ -35,17 +67,19 @@
             <chart:serialChart id="graph" categoryField="y"
                            startDuration="1" visible="false">
                 <chart:graphs>
-                    <chart:graph balloonText="Значение:[[x]] Группировка:[[y]]"
+                    <chart:graph balloonText="[[x]]:[[y]]"
                                  fillToAxis="x"
                                  valueField="x"/>
                 </chart:graphs>
+                <chart:export fileName="graph" position="BOTTOM_LEFT">
+                </chart:export>
                 <chart:categoryAxis gridPosition="START"/>
                 <chart:valueAxes>
                     <chart:axis id="y"
                                 axisAlpha="0"
                                 dashLength="1"
                                 position="LEFT"
-                                title="Показатели поля"/>
+                                title="Value"/>
                 </chart:valueAxes>
             </chart:serialChart>
         </vbox>

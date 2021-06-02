@@ -24,7 +24,7 @@ public class EfficiencyIndicators extends StandardEntity {
     private Integer producedProduction;
 
     @Column(name = "DEFECTIVE_PERCENT", nullable = false)
-    private Integer defectivePercent;
+    private Double defectivePercent;
     @Column(name = "DATE", nullable = false)
     private LocalDate date;
 
@@ -36,11 +36,11 @@ public class EfficiencyIndicators extends StandardEntity {
         return worker;
     }
 
-    public void setDefectivePercent(Integer defectivePercent) {
+    public void setDefectivePercent(Double defectivePercent) {
         this.defectivePercent = defectivePercent;
     }
 
-    public Integer getDefectivePercent() {
+    public Double getDefectivePercent() {
         return defectivePercent;
     }
 

@@ -32,7 +32,7 @@ create table EQUIPMENTRECORDS_EFFICIENCY_INDICATORS (
     EQUIPMENT_ID uuid not null,
     WORKER_ID uuid not null,
     PRODUCED_PRODUCTION integer not null,
-    DEFECTIVE_PERCENT integer not null,
+    DEFECTIVE_PERCENT double precision not null,
     DATE date not null,
     --
     primary key (ID)
@@ -57,3 +57,21 @@ create table EQUIPMENTRECORDS_WORKER (
     primary key (ID)
 )^
 -- end EQUIPMENTRECORDS_WORKER
+-- begin EQUIPMENTRECORDS_EQUIPMENT_STATE_CHANGE
+create table EQUIPMENTRECORDS_EQUIPMENT_STATE_CHANGE (
+    ID uuid,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    EQUIPMENT_ID uuid not null,
+    DATE_OF_CHANGE date not null,
+    STATE varchar(50) not null,
+    --
+    primary key (ID)
+)^
+-- end EQUIPMENTRECORDS_EQUIPMENT_STATE_CHANGE

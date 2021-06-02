@@ -1,11 +1,13 @@
 package com.company.equipmentrecords.web.screens.graph;
 
+import com.company.equipmentrecords.entity.ColumnInfo;
 import com.company.equipmentrecords.entity.InstancesForGraphs;
+import com.company.equipmentrecords.entity.GraphQuerySettings;
 import com.company.equipmentrecords.service.GraphService;
 import com.haulmont.charts.gui.components.charts.SerialChart;
-import com.haulmont.charts.gui.components.charts.XYChart;
 import com.haulmont.charts.gui.data.ListDataProvider;
 import com.haulmont.charts.gui.data.MapDataItem;
+import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.executors.BackgroundTask;
 import com.haulmont.cuba.gui.executors.BackgroundTaskHandler;
@@ -17,14 +19,12 @@ import com.haulmont.cuba.gui.screen.UiController;
 import com.haulmont.cuba.gui.screen.UiDescriptor;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 
 @UiController("equipmentrecords_Graph")
 @UiDescriptor("Graph.xml")
 public class Graph extends Screen {
-    @Inject
-    private Label<String> test;
     @Inject
     private SerialChart graph;
     @Inject
@@ -39,51 +39,119 @@ public class Graph extends Screen {
     private Button draw;
     @Inject
     private ProgressBar load;
+    @Inject
+    private PopupView popupView;
+    @Inject
+    private Notifications notifications;
 
-    private Class<?>[] classes;
-    //Оно в каком-то виде сейчас работатет
-    /*TODO 1.Присрать возможность делать запросы с агрегирующими функицями(AVG, COUNT)
-           2.Надо насрать еще пару сущностей
-           3.Сделать возможность брать данные и из связанных таблиц, а не только из 1
-           3.1 Либо хранением в enum'e этих запросов, либо тянуть эту срань EntityManager'ом
-           4. Сделать скрин не таким всратым по верстке
-           5. Сделать еще один скрин, где будут сравниваться показатели за разные временные промежутки
-           6. Замутить условий для выборки данных на этом скрине
-           7. Сделать сортировку по умолчанию в запросе по дате создания
-    * */
+    private Map<String, ColumnInfo> columnInfoMap = new HashMap<>();
+
+    private GraphQuerySettings settings = new GraphQuerySettings();
+    @Inject
+    private PopupButton colFunc;
+    @Inject
+    private CheckBox col1Order;
+    @Inject
+    private CheckBox col2Order;
+
     public void drawGraph(){
-        draw.setEnabled(false);
-        graph.setVisible(false);
-        load.setVisible(true);
+        changeVisible(false);
         ListDataProvider dataProvider = new ListDataProvider();
-        BackgroundTask<Integer, Void> task = new BackgroundTask<Integer, Void>(10, this) {
+        BackgroundTask<Integer, Void> task = new BackgroundTask<Integer, Void>(60, this) {
             @Override
             public Void run(TaskLifeCycle<Integer> taskLifeCycle) throws Exception {
-                graphService.getDataForGraph(column1.getValue(),Integer.class,column2.getValue(),String.class).forEach(graphObject -> {
-                    dataProvider.addItem(new MapDataItem().add("x", graphObject.getCordX()).
-                                                           add("y", graphObject.getCordY()));
-                });
+                ColumnInfo valueColumn = columnInfoMap.get(column1.getValue());
+                ColumnInfo groupColumn = columnInfoMap.get(column2.getValue());
+                settings.setValueCol(valueColumn.getQueryCol());
+                settings.setGroupCol(groupColumn.getQueryCol());
+                if(settings.getColFunc()!= null && settings.getColFunc().equals("AVG")){
+                    valueColumn.setColumnClass(BigDecimal.class);
+                }
+                graphService.getDataForGraph(settings,valueColumn.getColumnClass(),
+                        groupColumn.getColumnClass()).forEach(graphObject ->
+                    dataProvider.addItem(new MapDataItem().add("x", graphObject.getValue()).
+                                                           add("y", graphObject.getCategory())));
                 return null;
             }
             @Override
             public void done(Void result) {
-               draw.setEnabled(true);
-               load.setVisible(false);
-               graph.setVisible(true);
-               graph.setDataProvider(dataProvider);
+                changeVisible(true);
+                graph.setDataProvider(dataProvider);
+            }
+
+            @Override
+            public void canceled() {
+                changeVisible(true);
+                notifications.create(Notifications.NotificationType.TRAY).
+                        withCaption("ERROR").withDescription("Something went wrong in a process").show();
             }
         };
-        BackgroundTaskHandler taskHandler = backgroundWorker.handle(task);
+        BackgroundTaskHandler<Void> taskHandler = backgroundWorker.handle(task);
         taskHandler.execute();
 
     }
 
-    @Subscribe("graph_choose")
-    public void onGraph_chooseValueChange(HasValue.ValueChangeEvent<InstancesForGraphs> event) {
-        test.setValue(Objects.requireNonNull(event.getValue()).name());
-        column1.setOptionsList(Arrays.asList(event.getValue().columns()));
-        column2.setOptionsList(Arrays.asList(event.getValue().columns()));
-        classes = event.getValue().dataTypes();
+    public void checkForEnableDraw(){
+        if(this.column1.getValue()!=null && this.column2.getValue()!=null) this.draw.setEnabled(true);
+    }
+    @Subscribe("column1")
+    public void onColumn1ValueChange(HasValue.ValueChangeEvent event) {
+        checkForEnableDraw();
     }
 
+    @Subscribe("column2")
+    public void onColumn2ValueChange(HasValue.ValueChangeEvent event) {
+        checkForEnableDraw();
+    }
+
+    @Subscribe("graph_choose")
+    public void onGraph_chooseValueChange1(HasValue.ValueChangeEvent<InstancesForGraphs> event) {
+        this.column1.setValue(null);
+        this.column2.setValue(null);
+    }
+
+    private void changeVisible(boolean done){
+        draw.setEnabled(done);
+        load.setVisible(!done);
+        graph.setVisible(done);
+    }
+    @Subscribe("button")
+    protected void onButtonClick(Button.ClickEvent event) {
+        popupView.setPopupVisible(true);
+    }
+
+    @Subscribe("graph_choose")
+    public void onGraph_chooseValueChange(HasValue.ValueChangeEvent<InstancesForGraphs> event) {
+        settings.setEntity(Objects.requireNonNull(event.getValue()).name());
+        List<String> keysList = new ArrayList<>(event.getValue().columnInfoMap().keySet());
+        columnInfoMap = event.getValue().columnInfoMap();
+        column1.setOptionsList(keysList);
+        column2.setOptionsList(keysList);
+    }
+
+    @Subscribe("col1Order")
+    public void onCol1OrderValueChange(HasValue.ValueChangeEvent<Boolean> event) {
+        settings.setValueColOrder(Objects.requireNonNull(event.getValue()));
+        col2Order.setValue(false);
+    }
+
+    @Subscribe("col2Order")
+    public void onCol2OrderValueChange(HasValue.ValueChangeEvent<Boolean> event) {
+        settings.setGroupColOrder(Objects.requireNonNull(event.getValue()));
+        col1Order.setValue(false);
+    }
+
+    @Subscribe("changeColFunc")
+    public void onChangeColFunc(Action.ActionPerformedEvent event) {
+        settings.setColFunc(event.getComponent().getId());
+        colFunc.setCaption(event.getComponent().getId());
+    }
+
+    @Subscribe("colFuncCheckBox")
+    public void onColFuncCheckBoxValueChange(HasValue.ValueChangeEvent<Boolean> event) {
+        colFunc.setVisible(Objects.requireNonNull(event.getValue()));
+        if(!Objects.requireNonNull(event.getValue())){
+            settings.setColFunc(null);
+        }
+    }
 }

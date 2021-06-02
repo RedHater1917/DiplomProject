@@ -1,10 +1,12 @@
 package com.company.equipmentrecords.service;
 
-import com.company.equipmentrecords.entity.GraphObject;
+import com.company.equipmentrecords.entity.*;
 
-import java.util.Set;
+
+import java.util.List;
 
 public interface GraphService {
     String NAME = "equipmentrecords_GraphService";
-    <T,F> Set<GraphObject<T,F>> getDataForGraph(String col1, Class<T> col1Class, String col2,Class<F> col2Class);
+    <T,F> List<GraphObject<T,F>> getDataForGraph(GraphQuerySettings settings, Class<T> valueColClass, Class<F> groupColClass);
+    List<TimeGraphObject> getDataForTimeGraph(TimeGraphQuerySettings settings);
 }

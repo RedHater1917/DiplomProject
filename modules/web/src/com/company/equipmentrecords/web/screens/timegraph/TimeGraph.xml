@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
+        caption="msg://timeGraph.caption"
+        messagesPack="com.company.equipmentrecords.web.screens.timegraph">
+    <data>
+        <instance id="compareDc1"
+                  class="com.company.equipmentrecords.entity.EfficiencyIndicators"
+                  view="_local"/>
+        <instance id="compareDc2"
+                  class="com.company.equipmentrecords.entity.EfficiencyIndicators"
+                  view="_local"/>
+    </data>
+    <layout>
+        <hbox>
+            <vbox height="300px">
+                <vbox spacing="true">
+                    <hbox spacing="true">
+                        <radioButtonGroup id="queryType">
+                        </radioButtonGroup>
+                        <button id="draw" invoke="drawGraph" caption="msg://draw" enable="false">
+                        </button>
+                    </hbox>
+                    <hbox spacing="true" enable="false" id="querySetting">
+                        <vbox>
+                            <label value="msg://infoTxt" stylename="small">
+                            </label>
+                            <pickerField id="firstCompareEquip" caption="msg://first"
+                                         dataContainer="compareDc1" property="equipment">
+                            </pickerField>
+                            <pickerField id="secondCompareEquip" caption="msg://second"
+                                         dataContainer="compareDc2" property="equipment" required="false">
+                            </pickerField>
+                            <pickerField id="firstCompareWorker" caption="msg://first"
+                                         dataContainer="compareDc1" property="worker"
+                                         visible="false">
+                            </pickerField>
+                            <pickerField id="secondCompareWorker" caption="msg://second"
+                                         dataContainer="compareDc2" property="worker"
+                                         visible="false" required="false">
+                            </pickerField>
+                        </vbox>
+                    </hbox>
+                    <hbox id="timeLines" spacing="true" caption="Date lines">
+                        <dateField id="beg" caption="msg://beg" datatype="localDate" dateFormat="dd/MM/yyyy">
+                        </dateField>
+                        <dateField id="end" caption="msg://end" datatype="localDate" dateFormat="dd/MM/yyyy">
+                        </dateField>
+                    </hbox>
+                </vbox>
+            </vbox>
+            <progressBar id="load" visible="false" indeterminate="true"  stylename="indeterminate-circle">
+            </progressBar>
+            <chart:serialChart id="graph" categoryField="category"
+                               startDuration="1" visible="false">
+                <chart:graphs>
+                    <chart:graph balloonText="[[value1]]:[[category]]"
+                                 fillToAxis="x"
+                                 title="First value"
+                                 valueField="value1"/>
+                    <chart:graph balloonText="[[value2]]:[[category]]"
+                                 fillToAxis="x"
+                                 title="Second value"
+                                 valueField="value2"/>
+                </chart:graphs>
+                <chart:legend equalWidths="false"
+                              periodValueText="total: [[value.sum]]"
+                              position="TOP"
+                              valueAlign="LEFT"
+                              valueWidth="100"/>
+                <chart:chartCursor>
+                </chart:chartCursor>
+                <chart:export fileName="graph" position="BOTTOM_LEFT">
+                </chart:export>
+                <chart:categoryAxis gridPosition="START"/>
+                <chart:valueAxes>
+                    <chart:axis id="x"
+                                axisAlpha="0"
+                                dashLength="1"
+                                position="LEFT"
+                                type="NUMERIC"
+                                title="Value"/>
+                </chart:valueAxes>
+            </chart:serialChart>
+        </hbox>
+    </layout>
+</window>
