@@ -2,7 +2,7 @@ package com.company.equipmentrecords.entity;
 
 import java.io.Serializable;
 
-public class ColumnInfo implements Serializable {
+public class ColumnInfo implements Serializable,Cloneable {
     private Class<?> columnClass;
     private String queryCol;
     public ColumnInfo(Class<?> columnClass, String queryCol) {
@@ -24,5 +24,9 @@ public class ColumnInfo implements Serializable {
 
     public void setQueryCol(String queryCol) {
         this.queryCol = queryCol;
+    }
+
+    public ColumnInfo clone(){
+        return new ColumnInfo(this.columnClass,this.queryCol);
     }
 }

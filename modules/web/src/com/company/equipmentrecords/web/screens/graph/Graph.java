@@ -60,15 +60,15 @@ public class Graph extends Screen {
         BackgroundTask<Integer, Void> task = new BackgroundTask<Integer, Void>(60, this) {
             @Override
             public Void run(TaskLifeCycle<Integer> taskLifeCycle) throws Exception {
-                ColumnInfo valueColumn = columnInfoMap.get(column1.getValue());
+                ColumnInfo valueColumn = columnInfoMap.get(column1.getValue()).clone();//Нужно для того, чтобы не слетали настройки
                 ColumnInfo groupColumn = columnInfoMap.get(column2.getValue());
                 settings.setValueCol(valueColumn.getQueryCol());
                 settings.setGroupCol(groupColumn.getQueryCol());
                 if(settings.getColFunc()!= null){
                     if(settings.getColFunc().equals("AVG")){
                         valueColumn.setColumnClass(BigDecimal.class);
-                    } else if(valueColumn.getColumnClass().equals(String.class)){
-                        valueColumn.setColumnClass(Integer.class);
+                    } else if(settings.getColFunc().equals("COUNT")){
+                        valueColumn.setColumnClass(Long.class);
                     }
                 }
                 graphService.getDataForGraph(settings,valueColumn.getColumnClass(),
