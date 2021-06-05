@@ -64,8 +64,12 @@ public class Graph extends Screen {
                 ColumnInfo groupColumn = columnInfoMap.get(column2.getValue());
                 settings.setValueCol(valueColumn.getQueryCol());
                 settings.setGroupCol(groupColumn.getQueryCol());
-                if(settings.getColFunc()!= null && settings.getColFunc().equals("AVG")){
-                    valueColumn.setColumnClass(BigDecimal.class);
+                if(settings.getColFunc()!= null){
+                    if(settings.getColFunc().equals("AVG")){
+                        valueColumn.setColumnClass(BigDecimal.class);
+                    } else if(valueColumn.getColumnClass().equals(String.class)){
+                        valueColumn.setColumnClass(Integer.class);
+                    }
                 }
                 graphService.getDataForGraph(settings,valueColumn.getColumnClass(),
                         groupColumn.getColumnClass()).forEach(graphObject ->
