@@ -223,11 +223,13 @@ public class TimeGraph extends Screen {
     @Subscribe("beg")
     public void onBegValueChange(HasValue.ValueChangeEvent<Date> event) {
         checkForEnableDraw();
+        onQueryTypeValueChange(new HasValue.ValueChangeEvent<Integer>(queryType,queryType.getValue(),queryType.getValue()));
     }
 
     @Subscribe("end")
     public void onEndValueChange(HasValue.ValueChangeEvent<Date> event) {
         checkForEnableDraw();
+        onQueryTypeValueChange(new HasValue.ValueChangeEvent<Integer>(queryType,queryType.getValue(),queryType.getValue()));
     }
 
 }
