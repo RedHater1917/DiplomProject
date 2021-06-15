@@ -218,18 +218,27 @@ public class TimeGraph extends Screen {
     public void checkForEnableDraw(){
         this.draw.setEnabled(this.beg.getValue() != null && this.end.getValue() != null
                 && this.first.getValue() != null && this.queryType.getValue() != null);
+        onQueryTypeValueChange(new HasValue.ValueChangeEvent<Integer>(queryType,queryType.getValue(),queryType.getValue()));
     }
 
     @Subscribe("beg")
     public void onBegValueChange(HasValue.ValueChangeEvent<Date> event) {
         checkForEnableDraw();
-        onQueryTypeValueChange(new HasValue.ValueChangeEvent<Integer>(queryType,queryType.getValue(),queryType.getValue()));
+    }
+
+    @Subscribe("secondCompareWorker")
+    public void onSecondCompareWorkerValueChange(HasValue.ValueChangeEvent<Worker> event) {
+        checkForEnableDraw();
+    }
+
+    @Subscribe("secondCompareEquip")
+    public void onSecondCompareEquipValueChange(HasValue.ValueChangeEvent<Equipment> event) {
+        checkForEnableDraw();
     }
 
     @Subscribe("end")
     public void onEndValueChange(HasValue.ValueChangeEvent<Date> event) {
         checkForEnableDraw();
-        onQueryTypeValueChange(new HasValue.ValueChangeEvent<Integer>(queryType,queryType.getValue(),queryType.getValue()));
     }
 
 }
