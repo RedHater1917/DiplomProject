@@ -1,2 +1,1 @@
-# DiplomProject
-Дипломная работа
+# PetProject№2
